@@ -81,16 +81,67 @@
   </div>
 
   <script>
-    function parseDate(str) {
-      const [datePart, timePart] = str.split(";");
-      const [year, month, day] = datePart.split("-").map(Number);
-      const [hour, minute, second] = timePart.split(":").map(Number);
-      return new Date(year, month - 1, day, hour, minute, second).getTime();
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+      function parseDate(str) {
+        const [datePart, timePart] = str.split(";");
+        const [year, month, day] = datePart.split("-").map(Number);
+        const [hour, minute, second] = timePart.split(":").map(Number);
+        return new Date(year, month - 1, day, hour, minute, second).getTime();
+      }
 
-    const countdowns = [
-      ["countdown1", "2025-08-21;12:00:00", "2025-09-30;12:00:00"],
-      ["countdown2", "2025-08-21;12:00:00", "2026-05-05;2:00:00"]
-   </script>
+      const countdowns = [
+        ["countdown1", "2025-08-21;12:00:00", "2025-09-30;12:00:00"],
+        ["countdown2", "2025-08-21;12:00:00", "2026-05-05;02:00:00"]
+      ];
+
+      function updateCountdown(id, startStr, endStr) {
+        const container = document.getElementById(id);
+        const progressFill = container.querySelector(".progress-fill");
+        const progressText = container.querySelector(".progress-text");
+        const countdownText = container.querySelector(".countdown-text");
+
+        const startTime = parseDate(startStr);
+        const endTime = parseDate(endStr);
+        const now = new Date().getTime();
+
+        if (now >= endTime) {
+          progressFill.style.width = "100%";
+          progressText.innerHTML = "100%";
+          countdownText.innerHTML = "Time's up!";
+          return;
+        }
+
+        if (now <= startTime) {
+          progressFill.style.width = "0%";
+          progressText.innerHTML = "0%";
+          const remaining = endTime - now;
+          const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+          countdownText.innerHTML = `Starts in: ${days}d`;
+          return;
+        }
+
+        const total = endTime - startTime;
+        const elapsed = now - startTime;
+        const remaining = endTime - now;
+
+        const percent = ((elapsed / total) * 100).toFixed(1);
+        progressFill.style.width = percent + "%";
+        progressText.innerHTML = percent + "%";
+
+        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+        countdownText.innerHTML = `Time left: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+
+      function updateAllCountdowns() {
+        countdowns.forEach(c => updateCountdown(c[0], c[1], c[2]));
+      }
+
+      setInterval(updateAllCountdowns, 1000);
+      updateAllCountdowns();
+    });
+  </script>
 </body>
-  
+</html>
