@@ -11,11 +11,14 @@
       align-items: center;
       flex-direction: column;
       gap: 20px;
-      height: 100vh;
+      min-height: 100vh;
       background: #f0f0f0;
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
+    }
+    h1 {
+      text-align: center;
     }
     .countdown-container {
       text-align: center;
@@ -55,14 +58,13 @@
       font-size: 16px;
       color: #333;
     }
-    h2
-    {
+    h2 {
       margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-      <h1>Long Distance Countdowns</h1>
+  <h1>Long Distance Countdowns</h1>
 
   <div class="countdown-container" id="countdown1">
     <h2>Progress Between Visits</h2>
@@ -84,6 +86,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+
       function parseDate(str) {
         const [datePart, timePart] = str.split(";");
         const [year, month, day] = datePart.split("-").map(Number);
@@ -96,7 +99,7 @@
         ["countdown2", "2025-08-21;12:00:00", "2025-09-05;23:43:00", "I'm so proud of you baby! We did it!! We'll never be apart again!"]
       ];
 
-      function updateCountdown(id, startStr, endStr) {
+      function updateCountdown(id, startStr, endStr, endMessage) {
         const container = document.getElementById(id);
         const progressFill = container.querySelector(".progress-fill");
         const progressText = container.querySelector(".progress-text");
@@ -109,6 +112,7 @@
         if (now >= endTime) {
           progressFill.style.width = "100%";
           progressText.innerHTML = "100%";
+          countdownText.innerHTML = endMessage; // show custom message
           return;
         }
 
@@ -137,7 +141,7 @@
       }
 
       function updateAllCountdowns() {
-        countdowns.forEach(c => updateCountdown(c[0], c[1], c[2]));
+        countdowns.forEach(c => updateCountdown(c[0], c[1], c[2], c[3]));
       }
 
       setInterval(updateAllCountdowns, 1000);
