@@ -125,7 +125,7 @@
         const elapsed = now - startTime;
         const remaining = endTime - now;
 
-        const percent = ((elapsed / total) * 100).toFixed(1);
+        const percent = ((elapsed / total) * 100).toFixed(2);
         progressFill.style.width = percent + "%";
         progressText.innerHTML = percent + "%";
 
