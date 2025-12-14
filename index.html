@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Long Distance Progress</title>
+
   <style>
     body {
       display: flex;
@@ -17,9 +18,11 @@
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
     }
+
     .countdown-container {
       text-align: center;
       background: #ffcc80;
@@ -28,6 +31,7 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       width: 320px;
     }
+
     .progress {
       position: relative;
       height: 40px;
@@ -36,55 +40,42 @@
       overflow: hidden;
       margin-bottom: 15px;
     }
+
     .progress-fill {
       height: 100%;
       background: #917abe;
       width: 0%;
       transition: width 0.5s ease;
     }
+
     .progress-text {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #3b0855;
     }
+
     .countdown-text {
       font-size: 16px;
       color: #333;
     }
+
     h2 {
       margin-bottom: 10px;
     }
   </style>
 </head>
+
 <body>
   <h1>Long Distance Countdowns</h1>
 
-  <div class="countdown-container" id="countdown1">
-    <h2>Progress Between Visits</h2>
-    <div class="progress">
-      <div class="progress-fill"></div>
-      <div class="progress-text">0%</div>
-    </div>
-    <div class="countdown-text">Loading...</div>
-  </div>
-
-  <div class="countdown-container" id="countdown2">
-    <h2>Total Progress</h2>
-    <div class="progress">
-      <div class="progress-fill"></div>
-      <div class="progress-text">0%</div>
-    </div>
-    <div class="countdown-text">Loading...</div>
-  </div>
+  <!-- Countdown containers get injected here -->
+  <div id="countdown-root"></div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", () => {
 
       function parseDate(str) {
         const [datePart, timePart] = str.split(";");
@@ -93,58 +84,97 @@
         return new Date(year, month - 1, day, hour, minute, second).getTime();
       }
 
+      /* 🔹 ADD NEW COUNTDOWNS HERE 🔹 */
       const countdowns = [
-      ["countdown1", "2025-11-30;15:00:00", "2025-12-17;17:00:00", "Halfway! We get more James and Sandra time and we also get to spend our first christmas time ever with each other! I love you so much!"],
-      ["countdown2", "2025-08-21;12:00:00", "2026-05-05;17:00:00", "I'm so proud of you baby! We did it!!"]
+        {
+          id: "between-visits",
+          title: "Progress Between Visits",
+          start: "2025-11-30;15:00:00",
+          end: "2025-12-17;17:00:00",
+          message: "Halfway! We get more James and Sandra time and we also get to spend our first Christmas together!"
+        },
+        {
+          id: "total-progress",
+          title: "Total Progress",
+          start: "2025-08-21;12:00:00",
+          end: "2026-05-05;17:00:00",
+          message: "I'm so proud of you baby! We did it!!"
+        }
+
+        
+          id: "move-in",
+          title: "Move In",
+          start: "2025-12-12;18:00:00",
+          end: "2026-08-22;14:00:00",
+          message: "We're together now! While writing this it seems so far away but by the time you're reading this, it'll be right there. I can't wait to spend my life with the woman of my dreams."
+        // }
       ];
 
-      function updateCountdown(id, startStr, endStr, endMessage) {
-        const container = document.getElementById(id);
+      const root = document.getElementById("countdown-root");
+
+      function createCountdownHTML(c) {
+        const div = document.createElement("div");
+        div.className = "countdown-container";
+        div.id = c.id;
+
+        div.innerHTML = `
+          <h2>${c.title}</h2>
+          <div class="progress">
+            <div class="progress-fill"></div>
+            <div class="progress-text">0%</div>
+          </div>
+          <div class="countdown-text">Loading...</div>
+        `;
+
+        root.appendChild(div);
+      }
+
+      countdowns.forEach(createCountdownHTML);
+
+      function updateCountdown(c) {
+        const container = document.getElementById(c.id);
         const progressFill = container.querySelector(".progress-fill");
         const progressText = container.querySelector(".progress-text");
         const countdownText = container.querySelector(".countdown-text");
 
-        const startTime = parseDate(startStr);
-        const endTime = parseDate(endStr);
-        const now = new Date().getTime();
+        const startTime = parseDate(c.start);
+        const endTime = parseDate(c.end);
+        const now = Date.now();
 
         if (now >= endTime) {
           progressFill.style.width = "100%";
-          progressText.innerHTML = "100%";
-          countdownText.innerHTML = endMessage; // show custom message
+          progressText.textContent = "100%";
+          countdownText.textContent = c.message;
           return;
         }
 
         if (now <= startTime) {
           progressFill.style.width = "0%";
-          progressText.innerHTML = "0%";
-          const remaining = endTime - now;
-          const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-          countdownText.innerHTML = `Starts in: ${days}d`;
+          progressText.textContent = "0%";
+          const days = Math.floor((endTime - now) / 86400000);
+          countdownText.textContent = `Starts in: ${days}d`;
           return;
         }
 
-        const total = endTime - startTime;
-        const elapsed = now - startTime;
-        const remaining = endTime - now;
-
-        const percent = ((elapsed / total) * 100).toFixed(2);
+        const percent = ((now - startTime) / (endTime - startTime) * 100).toFixed(2);
         progressFill.style.width = percent + "%";
-        progressText.innerHTML = percent + "%";
+        progressText.textContent = percent + "%";
 
-        const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-        countdownText.innerHTML = `Time left: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        const remaining = endTime - now;
+        const d = Math.floor(remaining / 86400000);
+        const h = Math.floor((remaining % 86400000) / 3600000);
+        const m = Math.floor((remaining % 3600000) / 60000);
+        const s = Math.floor((remaining % 60000) / 1000);
+
+        countdownText.textContent = `Time left: ${d}d ${h}h ${m}m ${s}s`;
       }
 
-      function updateAllCountdowns() {
-        countdowns.forEach(c => updateCountdown(c[0], c[1], c[2], c[3]));
+      function updateAll() {
+        countdowns.forEach(updateCountdown);
       }
 
-      setInterval(updateAllCountdowns, 1000);
-      updateAllCountdowns();
+      setInterval(updateAll, 1000);
+      updateAll();
     });
   </script>
 </body>
