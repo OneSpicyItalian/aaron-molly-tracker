@@ -63,34 +63,43 @@
   </style>
 </head>
 <body>
-  <h1>Long Distance Countdowns</h1>
+<h1>Long Distance Countdowns</h1>
 
-  <div class="countdown-container" id="countdown1">
-    <h2>Progress Between Visits</h2>
-    <div class="progress">
-      <div class="progress-fill"></div>
-      <div class="progress-text">0%</div>
-    </div>
-    <div class="countdown-text">Loading...</div>
-  </div>
-
-  <div class="countdown-container" id="countdown2">
-    <h2>Total Progress</h2>
-    <div class="progress">
-      <div class="progress-fill"></div>
-      <div class="progress-text">0%</div>
-    </div>
-    <div class="countdown-text">Loading...</div>
-  </div>
-
-  <div class="countdown-container" id="countdown3">
+<div class="countdown-container" id="countdown3">
     <h2>Move-In Progress</h2>
     <div class="progress">
-      <div class="progress-fill"></div>
-      <div class="progress-text">0%</div>
+        <div class="progress-fill"></div>
+        <div class="progress-text">0%</div>
     </div>
     <div class="countdown-text">Loading...</div>
-  </div>
+</div>
+
+<div class="countdown-container" id="countdown4">
+    <h2>Title for Countdown 4</h2>
+    <div class="progress">
+        <div class="progress-fill"></div>
+        <div class="progress-text">0%</div>
+    </div>
+    <div class="countdown-text">Loading...</div>
+</div>
+
+<div class="countdown-container" id="countdown1">
+    <h2>Progress Between Visits</h2>
+    <div class="progress">
+        <div class="progress-fill"></div>
+        <div class="progress-text">0%</div>
+    </div>
+    <div class="countdown-text">Loading...</div>
+</div>
+
+<div class="countdown-container" id="countdown2">
+    <h2>Total Progress</h2>
+    <div class="progress">
+        <div class="progress-fill"></div>
+        <div class="progress-text">0%</div>
+    </div>
+    <div class="countdown-text">Loading...</div>
+</div>
   
   <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -103,11 +112,31 @@
       }
 
       const countdowns = [
-      ["countdown1", "2026-04-26;15:00:00", "2026-05-05;19:00:00", "I can't believe it's been a year! It felt so fast! I'm so glad we get to be together again! You mean the world to me and never stop making my life as bright as you gave. I truly love you more than words can describe."],
-      ["countdown2", "2025-08-21;12:00:00", "2026-05-05;19:00:00", "I'm so proud of you baby! We did it!!"],
-      ["countdown3", "2025-12-12;18:00:00", "2026-08-22;14:00:00", "While writing this, it seems so far away. I can only dream of being with you forever. I love you so much more than words can express. College will be perfect Molly."]
-      ];
-
+  [
+    "countdown3", 
+    "2025-12-12;18:00:00", 
+    "2026-08-22;14:00:00", 
+    "While writing this, it seems so far away. I can only dream of being with you forever. I love you so much more than words can express. College will be perfect Molly."
+  ],
+  [
+    "countdown4", 
+    "2026-05-28;17:00:00", 
+    "2026-09-26;12:00:00", 
+    "I'm so excited for our first football game together! GO BUCKS!"
+  ],
+  [
+    "countdown1", 
+    "2026-04-26;15:00:00", 
+    "2026-05-05;19:00:00", 
+    "I can't believe it's been a year! It felt so fast! I'm so glad we get to be together again! You mean the world to me and never stop making my life as bright as you gave. I truly love you more than words can describe."
+  ],
+  [
+    "countdown2", 
+    "2025-08-21;12:00:00", 
+    "2026-05-05;19:00:00", 
+    "I'm so proud of you baby! We did it!!"
+  ]
+];
       function updateCountdown(id, startStr, endStr, endMessage) {
         const container = document.getElementById(id);
         const progressFill = container.querySelector(".progress-fill");
